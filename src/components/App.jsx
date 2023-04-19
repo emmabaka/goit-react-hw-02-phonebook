@@ -2,6 +2,7 @@ import { nanoid } from 'nanoid';
 import { Component } from 'react';
 import ContactList from './ContactList/ContactList';
 import ContactForm from './ContactForm/ContactForm';
+import Filter from './Filter/Filter';
 
 export class App extends Component {
   state = {
@@ -15,21 +16,49 @@ export class App extends Component {
   };
 
   handleSubmit = (contactName, contactNumber) => {
-    this.setState(state => {
-      const contactArr = [...state.contacts];
+    this.setState(prevState => {
+      const isInclude = prevState.contacts.some(
+        contact => contact.name === contactName
+      );
+      if (isInclude) {
+        alert(`${contactName} is already in contacts`);
+        return prevState;
+      } else {
+        const newContact = {
+          id: nanoid(4),
+          name: contactName,
+          number: contactNumber,
+        };
+        const contactArr = [newContact, ...prevState.contacts];
+        return { contacts: contactArr };
+      }
+    });
+  };
 
-      contactArr.push({
-        id: nanoid(4),
-        name: contactName,
-        number: contactNumber,
-      });
+  handleFilterChange = e => {
+    const filterValue = e.target.value;
+    this.setState({ filter: filterValue });
+  };
 
-      return { contacts: contactArr };
+  filterByName = () => {
+    const { contacts, filter } = this.state;
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter.toLowerCase())
+    );
+  };
+
+  deleteContact = id => {
+    const { contacts } = this.state;
+    console.log(id);
+    const filtered = contacts.filter(contact => contact.id !== id);
+    this.setState(() => {
+      return { contacts: filtered };
     });
   };
 
   render() {
-    const { contacts } = this.state;
+    const filteredContacts = this.filterByName();
+
     return (
       <div
         style={{
@@ -44,8 +73,14 @@ export class App extends Component {
         <h1>Phonebook</h1>
         <ContactForm handleSubmit={this.handleSubmit} />
         <h2>Contacts</h2>
-        <p>Find contacts by name</p>
-        <ContactList contacts={contacts} />
+        <Filter
+          value={this.state.filter}
+          handleChange={this.handleFilterChange}
+        />
+        <ContactList
+          contacts={filteredContacts}
+          deleteContact={this.deleteContact}
+        />
       </div>
     );
   }
