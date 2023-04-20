@@ -49,8 +49,9 @@ export class App extends Component {
 
   deleteContact = id => {
     const { contacts } = this.state;
-    console.log(id);
+
     const filtered = contacts.filter(contact => contact.id !== id);
+
     this.setState(() => {
       return { contacts: filtered };
     });
@@ -63,10 +64,9 @@ export class App extends Component {
       <div
         style={{
           height: '100vh',
+          margin: '30px',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
           color: '#010101',
         }}
       >
