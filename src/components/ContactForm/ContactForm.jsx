@@ -17,7 +17,6 @@ class ContactForm extends Component {
     this.setState({ name: contactName, number: contactNumber });
 
     handleSubmit(contactName, contactNumber);
-    console.log(this.state);
   };
 
   render() {
@@ -58,4 +57,3 @@ export default ContactForm;
 ContactForm.propTypes = {
   handleSubmit: PropTypes.func,
 };
-
