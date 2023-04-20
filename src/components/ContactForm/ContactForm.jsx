@@ -58,3 +58,4 @@ export default ContactForm;
 ContactForm.propTypes = {
   handleSubmit: PropTypes.func,
 };
+
